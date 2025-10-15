@@ -1,0 +1,36 @@
+name: MATLAB
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ubuntu:20.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MATLAB
+        uses: matlab-actions/setup-matlab@v2
+        with:
+          release: R2025a
+
+      - name: Build MEX file
+        uses: matlab-actions/run-command@v2
+        with:
+          command: |
+            copyfile(fullfile(matlabroot,'extern','examples','mex','explore.c'),'.','f')
+            mex explore.c
+
+      - name: Upload MEX binary
+        uses: actions/upload-artifact@v4
+        with:
+          path: explore.mexa64
+        
