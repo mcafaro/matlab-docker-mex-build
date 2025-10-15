@@ -8,7 +8,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  test:
+  mex:
     runs-on: ubuntu-latest
 
     container:
@@ -21,6 +21,9 @@ jobs:
         uses: matlab-actions/setup-matlab@v2
         with:
           release: R2025a
+
+      - name: Install a supported compiler
+        run: sudo apt install -y gcc
 
       - name: Build MEX file
         uses: matlab-actions/run-command@v2
